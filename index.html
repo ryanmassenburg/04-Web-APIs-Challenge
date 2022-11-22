@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coding Quiz</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./assets/style.css" />
   </head>
+
   <body>
     <nav>
-
+      <p id="highscores">View Highscores</p>
+      <p id="timer">0</p>
     </nav>
     <main>
+      <section>
         <h1>Coding Quiz</h1>
-        <p>Answer as many question correctly as you can within the time limit</p>
-        <button>Start</button>
+        <p>Answer as many questions correctly as you can within the time limit</p>
+        <button id="start-button">Start</button>
+      </section>
+      <section id="questions">
+        <h1>Question 1</h1>
+        <button id="answer1" class="answer-button">answer 1</button>
+        <button id="answer2" class="answer-button">answer 2</button>
+        <button id="answer3" class="answer-button">answer 3</button>
+        <button id="answer4" class="answer-button">answer 4</button>        
+      </section>
     </main>
-    <script src="script.js"></script>
+    <script src="./assets/script.js"></script>
   </body>
+
 </html>

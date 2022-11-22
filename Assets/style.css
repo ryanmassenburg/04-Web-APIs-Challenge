@@ -1,0 +1,13 @@
+#timer {
+	visibility: hidden;
+}
+#highscores {
+	color:blue
+}
+#questions {
+	visibility: hidden;
+}
+nav{
+display:flex;
+justify-content: space-between;
+}
