@@ -1,0 +1,64 @@
+#timer {
+	visibility: hidden;
+}
+#viewhighscores {
+	color:blue
+}
+#questions {
+	visibility: hidden;
+	
+}
+#complete {
+	visibility: hidden;
+	
+}
+#highscores {
+	visibility: hidden;
+	
+}
+nav{
+display:flex;
+justify-content: space-between;
+}
+#input{
+	display:flex;
+	justify-content:left;
+}
+.answer-button{
+	background-color: rgb(66, 0, 97);
+	border-radius: 8px;
+	font-size: 20px;
+	color: white;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 4px;
+}
+.ui-button{
+	background-color: rgb(66, 0, 97);
+	border-radius: 8px;
+	font-size: 20px;
+	color: white;
+	text-align: center;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 4px;
+}
+.main-section{
+	position: absolute;
+	top: 50px;
+	left: 20%;
+	width: 60%;
+	display: flex;
+	flex-direction: column;
+}
+#intro{
+	align-items: center;
+}
+#answers{
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+}
