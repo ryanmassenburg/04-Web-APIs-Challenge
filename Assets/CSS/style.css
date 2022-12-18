@@ -48,17 +48,42 @@ justify-content: space-between;
 }
 .main-section{
 	position: absolute;
-	top: 50px;
-	left: 20%;
-	width: 60%;
+	top: 100px;
+	left: max(calc(40% - 100px), calc(50% - 300px));
+	width: min(calc(20% + 200px), 600px);
 	display: flex;
 	flex-direction: column;
 }
 #intro{
 	align-items: center;
 }
+#complete{
+	align-items: center;
+}
+#highscores{
+	align-items: center;
+}
+#answer-result{
+	visibility: hidden;
+	text-align: center;
+	border-style: solid none none none;
+	border-width: 1px;
+	border-color: black;
+	padding: 10px;
+}
 #answers{
 	display: flex;
 	flex-direction: column;
 	width: fit-content;
+}
+#clear-button{
+	position: absolute;
+	top: 350px;
+}
+#restart-button{
+	position: absolute;
+	top: 400px;
+}
+#highscore-list{
+	font-size: 20px;
 }

@@ -1,5 +1,5 @@
 var timerEl = document.querySelector("#timer");
-var viewhighscoresEl = document.querySelector("#viewhighscores");
+var viewHighscoresEl = document.querySelector("#viewhighscores");
 var introEl = document.querySelector("#intro");
 var highscoresEl = document.querySelector("#highscores");
 var completeEl = document.querySelector("#complete");
@@ -8,18 +8,17 @@ var inputEl = document.querySelector("#input-initials");
 var scoreEl = document.querySelector("#score");
 var startEl = document.querySelector("#start-button");
 var restartEl = document.querySelector("#restart-button");
+var clearEl = document.querySelector("#clear-button")
 var questionsEl = document.querySelector("#questions");
 var questionEl = document.querySelector("#question");
 var answersEl = document.querySelectorAll(".answer-button");
-var answer1El = document.querySelector("#answer1");
-var answer2El = document.querySelector("#answer2");
-var answer3El = document.querySelector("#answer3");
-var answer4El = document.querySelector("#answer4");
+var answerEl = [document.querySelector("#answer1"), document.querySelector("#answer2"), document.querySelector("#answer3"), document.querySelector("#answer4")];
 var answerResultEl = document.querySelector("#answer-result");
 var highscoreListEl = document.querySelector("#highscore-list");
-var currentQuestion = 0
-var score = 0
-
+var currentQuestion = 0;
+var score = 0;
+var timerInterval;
+var textTimerInterval;
 var questionData = [
 	{questionText:""},
 	{answerText: ""},
@@ -31,36 +30,37 @@ var questionData = [
 	{placeholder5: ""},
 	{placeholder6: ""},
 	{placeholder7: ""}]
+
 //storing question information
 questionData[0].questionText = "Which of the following can be stored within arrays";
 questionData[0].answerText = ["Boolean", "String", "Number", 'All of the above'];
 questionData[0].correctAnswer = 4;
-questionData[1].questionText = "question 2";
-questionData[1].answerText = ["not this one", "not this one either", "this one", "definitely not this one"];
+questionData[1].questionText = "Which symbols can be placed around text to turn it into a string";
+questionData[1].answerText = ["'", '"', "All of the above", "None of the above"];
 questionData[1].correctAnswer = 3;
-questionData[2].questionText = "question 3";
-questionData[2].answerText = ["this one", "not this one", "not this one either", "definitely not this one"];
+questionData[2].questionText = "what is the largest number that can be stored in javaScript";
+questionData[2].answerText = ["1.7976931348623158e+308", "15", "4294967296", "99999999999999999999"];
 questionData[2].correctAnswer = 1;
-questionData[3].questionText = "question 4";
-questionData[3].answerText = ["this one", "not this one", "not this one either", "definitely not this one"];
+questionData[3].questionText = "Which of these is not a semantic element in html";
+questionData[3].answerText = ["<div>", "<footer>", "<aside>", "<nav>"];
 questionData[3].correctAnswer = 1;
-questionData[4].questionText = "question 5";
-questionData[4].answerText = ["no", "no", "yes", "no"];
+questionData[4].questionText = "What does HTML stand for";
+questionData[4].answerText = ["Hyper Technology Message Latency", "Hash Token Memory Language", "Hyper Text Markup Language", "Hash Text Message Language"];
 questionData[4].correctAnswer = 3;
-questionData[5].questionText = "question 6";
-questionData[5].answerText = ["absolutely", "definitely not", "nope", "no!"];
+questionData[5].questionText = "What does CSS stand for";
+questionData[5].answerText = ["Cascading Style Sheets", "Compiled Style Sets", "Cell Sorted Strings", "Client Side Stacks"];
 questionData[5].correctAnswer = 1;
-questionData[6].questionText = "question 7";
-questionData[6].answerText = ["click here", "don't click", "don't click", "don't click"];
+questionData[6].questionText = "Javascript coments start with //";
+questionData[6].answerText = ["True", "False"];
 questionData[6].correctAnswer = 1;
-questionData[7].questionText = "question 8";
-questionData[7].answerText = ["yes", "yes", "yes", "all of the above"];
+questionData[7].questionText = "Which tag is used to create a numbered list";
+questionData[7].answerText = ["<ul>", "<nl>", "<list>", "<ol>"];
 questionData[7].correctAnswer = 4;
-questionData[8].questionText = "question 9";
-questionData[8].answerText = ["nope", "nope", "yup", "nope^2"];
+questionData[8].questionText = "Which event triggers  9 when the user clicks an HTML element";
+questionData[8].answerText = ["onmouseclick", "click", "onclick", "mouseselect"];
 questionData[8].correctAnswer = 3;
-questionData[9].questionText = "question 10";
-questionData[9].answerText = ["if you", "click here", "you will", "be correct"];
+questionData[9].questionText = "How many questions have you answered so far";
+questionData[9].answerText = ["11", "9", "8", "7"];
 questionData[9].correctAnswer = 2;  
 
 //activates the timer with a specified time
@@ -68,15 +68,46 @@ function setTimer(time) {
 	var time;
 	timerEl.style.visibility = "visible";
 	timerEl.textContent = time;
-	var timerInterval = setInterval(function() {
+	timerInterval = setInterval(function() {
 		time--;
 		timerEl.textContent = time;
 		if(time === 0) {
+			clearInterval(timerInterval);
 			timerEl.style.visibility = "hidden";
+			answerResultEl.style.visibility = "Visible";
+			answerResultEl.textContent = "Times Up";
+			answerResultEl.style.color = "red";
+			clearInterval(textTimerInterval);
+			textTimerInterval = setInterval(function() {
+				answerResultEl.style.visibility = "Hidden";
+				clearInterval(textTimerInterval);
+			}, 1500);
 			endQuiz();
 		}	
-		console.log("timer running")
 }, 1000);
+}
+
+//Shuffles the order in which the answers are listed for all the questions, avoids shuffling "All of the above" and "None of the above"
+function shuffleAnswerOrder(){
+for (i1=0; i1<questionData.length; i1++){
+	var shuffleCount = 0
+	for (i2=0; i2<questionData[i1].answerText.length; i2++){
+		if(questionData[i1].answerText[i2] !== "None of the above" && questionData[i1].answerText[i2] !== "All of the above")
+		shuffleCount++
+	}
+	for (i2=0; i2<shuffleCount; i2++){
+		var random = Math.floor(Math.random()*shuffleCount)
+		var temp = questionData[i1].answerText[i2]
+		questionData[i1].answerText[i2] = questionData[i1].answerText[random]
+		questionData[i1].answerText[random] = temp
+		if(questionData[i1].correctAnswer-1 === i2){
+			questionData[i1].correctAnswer = random+1;
+		}
+		else if(questionData[i1].correctAnswer-1 === random){
+			questionData[i1].correctAnswer = i2+1;
+		}
+	}
+}
 }
 
 //Ends the quiz
@@ -84,19 +115,29 @@ function endQuiz() {
 	currentQuestion = 0;
 	timerEl.style.visibility = "Hidden";
 	questionsEl.style.visibility = "Hidden";
+	answerEl[0].style.visibility = "Hidden";
+	answerEl[1].style.visibility = "Hidden";
+	answerEl[2].style.visibility = "Hidden";
+	answerEl[3].style.visibility = "Hidden";
+	inputEl.value = "";
 	completeEl.style.visibility = "Visible";
 	scoreEl.textContent = "You scored " + score + " points";
 	clearInterval(timerInterval);
 }
 
-//sets the question text to that of the current question
+//sets the question answers to those of the current question
 function setQuestionText(questionNumber) {
 	var questionNumber
 	questionEl.textContent = questionData[questionNumber].questionText;
-	answer1El.textContent = questionData[questionNumber].answerText[0];
-	answer2El.textContent = questionData[questionNumber].answerText[1];
-	answer3El.textContent = questionData[questionNumber].answerText[2];
-	answer4El.textContent = questionData[questionNumber].answerText[3];
+	for(i=0; i<4; i++) {
+		if(questionData[questionNumber].answerText[i] !== undefined){
+			answerEl[i].style.visibility = "Visible";
+			answerEl[i].textContent = questionData[questionNumber].answerText[i];
+		}
+		else{
+			answerEl[i].style.visibility = "Hidden";
+		}
+	}
 }
 
 //displays if the answer was correct or incorrect
@@ -111,10 +152,11 @@ function showResult(isCorrect) {
 		answerResultEl.textContent = "Incorrect";
 		answerResultEl.style.color = "red";
 	}
-	var timerInterval = setInterval(function() {
+	clearInterval(textTimerInterval);
+	textTimerInterval = setInterval(function() {
 		answerResultEl.style.visibility = "Hidden";
-		clearInterval(timerInterval);
-	}, 2000);
+		clearInterval(textTimerInterval);
+	}, 1500);
 }
 
 //starts the quiz
@@ -122,46 +164,68 @@ startEl.addEventListener("click", function() {
 	highscoresEl.style.visibility = "hidden";
 	introEl.style.visibility = "hidden";
 	highscoresEl.style.visibility = "hidden";
+	viewHighscoresEl.style.visibility = "hidden";
 	score = 0;
 	setTimer(60);
-	setQuestionText(currentQuestion)
+	shuffleAnswerOrder();
+	setQuestionText(currentQuestion);
 	questionsEl.style.visibility = "visible";
 
 })
 
 //submits score
 submitEl.addEventListener("click", function() {
-	completeEl.style.visibility = "hidden";
-	var highscores = []
-	var highscore = {
+	if (inputEl.value != ""){
+		var highscore = {
 		initials:inputEl.value ,
 		score:score ,
 	}
 	localStorage.setItem("score" + String(localStorage.length), JSON.stringify(highscore));
+	completeEl.style.visibility = "hidden";
+	generateHighscores();
+	highscoresEl.style.visibility = "Visible";
+	}
+	else{
+		clearInterval(textTimerInterval);
+		answerResultEl.style.visibility = "Visible";
+		answerResultEl.textContent = "Enter a name";
+		answerResultEl.style.color = "red";
+		textTimerInterval = setInterval(function() {
+			answerResultEl.style.visibility = "Hidden";
+			clearInterval(textTimerInterval);
+		}, 1500);
+	}
+})
+
+//populates the list of highscores with the top 10 scores
+function generateHighscores(){
+	highscoreListEl.replaceChildren();
+	var highscores = [];
 	for (i=0; i<localStorage.length; i++) {
-		highscore = JSON.parse(localStorage.getItem("score" + String(i)));
-		highscores.push(highscore)
+		highscores.push(JSON.parse(localStorage.getItem("score" + String(i))))
 	}
 	highscores.sort((a, b) => (a.score < b.score) ? 1 : -1);
 	for (i=0; i<highscores.length; i++) {
+		if (i<10) {
 		var listItem = document.createElement("li");
-		listItem.textContent = highscores[i].score + "	" + highscores[i].initials;
+		listItem.textContent = highscores[i].initials + ":	" + highscores[i].score;
 		highscoreListEl.appendChild(listItem);
+		}
 	}
-	highscoresEl.style.visibility = "Visible";
-})
+}
 
 //takes the user to the highscore page
-viewhighscoresEl.addEventListener("click", function() {
+viewHighscoresEl.addEventListener("click", function() {
 	introEl.style.visibility = "hidden";
+	generateHighscores();
 	highscoresEl.style.visibility = "Visible";
-	viewhighscoresEl.style.visibility = "hidden";
+	viewHighscoresEl.style.visibility = "hidden";
 })
 
 //returns to the first page
 restartEl.addEventListener("click", function() {
 	highscoresEl.style.visibility = "Hidden";
-	highscoresEl.style.visibility = "Visible";
+	viewHighscoresEl.style.visibility = "Visible";
 	introEl.style.visibility = "Visible";
 	score = 0
 })
@@ -170,22 +234,26 @@ restartEl.addEventListener("click", function() {
 answersEl.forEach(answerEl => {
 	answerEl.addEventListener("click", function() {
 		if(answerEl === document.getElementById("answer"+questionData[currentQuestion].correctAnswer)) {
-			console.log("correct");
 			showResult(true);
 			score++;
 			currentQuestion++;
 		}
 		else {
-			console.log("incorrect");
 			showResult(false);
 			currentQuestion++;
 			}	
 
 		if (currentQuestion<questionData.length) {
-			setQuestionText(currentQuestion)
+			setQuestionText(currentQuestion);
 		}	
 		else {
 			endQuiz();
 		}
 		})
+})
+
+//erases all highscores from local storage
+clearEl.addEventListener("click", function() {
+	localStorage.clear();
+	highscoreListEl.replaceChildren();
 })
